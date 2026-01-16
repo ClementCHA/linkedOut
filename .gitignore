@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+out/
+
+# Turbo
+.turbo/
+
+# Coverage
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+*.test.js
+*.spec.js
+
+# TypeScript
+*.tsbuildinfo
+
+# Claude local settings
+.claude/settings.local.json
+.claude/CLAUDE.local.md
+
+# Vercel
+.vercel/

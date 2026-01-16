@@ -1,0 +1,23 @@
+{
+  "name": "linkedout",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LinkedIn Bullshit Detector - Collaborative platform to rate LinkedIn posts",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "check": "turbo check",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "keywords": ["hexagonal-architecture", "typescript", "monorepo", "nextjs", "solid"],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.18.3",
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "turbo": "^2.7.4",
+    "typescript": "^5.9.3"
+  }
+}

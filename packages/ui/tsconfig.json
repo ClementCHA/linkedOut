@@ -1,0 +1,8 @@
+{
+  "extends": "@linkedout/config/tsconfig/react",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
+}
