@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- LinkedIn blue background with rounded corners -->
+  <rect width="128" height="128" rx="16" fill="#0A66C2"/>
+
+  <!-- "out" text in white, similar to LinkedIn "in" style -->
+  <text
+    x="50%"
+    y="54%"
+    dominant-baseline="middle"
+    text-anchor="middle"
+    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+    font-weight="600"
+    font-size="52"
+    fill="white"
+    letter-spacing="-2"
+  >out</text>
+</svg>

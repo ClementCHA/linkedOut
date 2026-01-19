@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree /F \"C:\\\\Git\\\\linkedout\\\\apps\\\\extension\" /L 3)",
+      "WebSearch",
+      "Bash(pnpm build:*)",
+      "Bash(dir:*)",
+      "Bash(tree:*)",
+      "Bash(pnpm --filter @linkedout/core build:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm --filter @linkedout/api build:*)",
+      "Bash(pnpm --filter @linkedout/api test)",
+      "Bash(pnpm --filter @linkedout/core test)",
+      "Bash(docker exec:*)",
+      "Bash(curl:*)",
+      "Bash(git restore:*)",
+      "Bash(git add:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
