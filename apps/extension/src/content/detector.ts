@@ -1,17 +1,19 @@
 export interface PostData {
-  hash: string
+  urn: string
   content: string
   author: string
   authorUrl: string | null
   timestamp: string | null
 }
 
-// Selectors for LinkedIn DOM (updated for 2025)
+// Selectors for LinkedIn DOM
 export const POST_SELECTOR = '.feed-shared-update-v2'
 const CONTENT_SELECTOR = '.update-components-text, .feed-shared-update-v2__description'
 const AUTHOR_SELECTOR = '.update-components-actor__title, .feed-shared-actor__name'
 const AUTHOR_LINK_SELECTOR = '.update-components-actor__meta-link, .update-components-actor__container-link'
 const TIMESTAMP_SELECTOR = '.update-components-actor__sub-description, .feed-shared-actor__sub-description'
+
+const URN_REGEX = /urn:li:(activity|share|ugcPost):(\d+)/
 
 /**
  * Extract data from a LinkedIn post element
@@ -20,7 +22,6 @@ export function detectPost(postElement: HTMLElement): PostData | null {
   const contentElement = postElement.querySelector(CONTENT_SELECTOR)
   const authorElement = postElement.querySelector(AUTHOR_SELECTOR)
 
-  // Skip posts without content or author
   if (!contentElement || !authorElement) {
     return null
   }
@@ -28,7 +29,7 @@ export function detectPost(postElement: HTMLElement): PostData | null {
   const content = contentElement.textContent?.trim() || ''
   const author = authorElement.textContent?.trim() || ''
 
-  // Skip very short posts (likely not real content)
+  // Skip very short posts
   if (content.length < 50) {
     return null
   }
@@ -39,29 +40,33 @@ export function detectPost(postElement: HTMLElement): PostData | null {
   const authorUrl = authorLinkElement?.href || null
   const timestamp = timestampElement?.getAttribute('datetime') || null
 
-  // Generate unique hash for this post
-  const hash = generateHash(content + author + (timestamp || ''))
+  // Extract LinkedIn URN (unique identifier)
+  const urn = extractUrn(postElement) || generateHash(content + author + (timestamp || ''))
 
-  return {
-    hash,
-    content,
-    author,
-    authorUrl,
-    timestamp,
-  }
+  return { urn, content, author, authorUrl, timestamp }
 }
 
 /**
- * Generate a simple hash for post identification
- * Uses a fast non-crypto hash since we just need uniqueness, not security
+ * Extract LinkedIn URN from post element
+ */
+function extractUrn(postElement: HTMLElement): string | null {
+  const dataUrn = postElement.getAttribute('data-urn')
+  if (dataUrn) {
+    const match = dataUrn.match(URN_REGEX)
+    if (match) return match[0]
+  }
+  return null
+}
+
+/**
+ * Generate a simple hash for post identification (fallback)
  */
 function generateHash(text: string): string {
   let hash = 0
   for (let i = 0; i < text.length; i++) {
     const char = text.charCodeAt(i)
     hash = ((hash << 5) - hash) + char
-    hash = hash & hash // Convert to 32bit integer
+    hash = hash & hash
   }
-  // Convert to hex and ensure positive
-  return Math.abs(hash).toString(16).padStart(8, '0')
+  return 'hash-' + Math.abs(hash).toString(16).padStart(8, '0')
 }

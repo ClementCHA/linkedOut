@@ -16,12 +16,14 @@
   "dependencies": {
     "@hono/node-server": "^1.19.9",
     "@linkedout/core": "workspace:*",
-    "hono": "^4.11.4"
+    "hono": "^4.11.4",
+    "pg": "^8.17.1"
   },
   "devDependencies": {
     "@linkedout/config": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.9",
+    "@types/pg": "^8.16.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",

@@ -1,58 +1,77 @@
 import { detectPost, POST_SELECTOR } from './detector'
 import { injectOverlay } from './overlay'
 
-// Initialize the extension
-function init() {
-  console.log('[LinkedOut] Extension loaded')
+const pendingPosts = new Set<HTMLElement>()
+let isProcessing = false
 
-  if (!document.body) {
-    return
-  }
+function init() {
+  if (!document.body) return
 
   // Process existing posts
-  document.querySelectorAll<HTMLElement>(POST_SELECTOR).forEach(processPost)
+  document.querySelectorAll<HTMLElement>(POST_SELECTOR).forEach(queuePost)
+  processPendingPosts()
 
   // Watch for new posts (infinite scroll)
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const element = node as HTMLElement
+  const observer = new MutationObserver(
+    debounce(() => {
+      document.querySelectorAll<HTMLElement>(POST_SELECTOR).forEach(queuePost)
+      processPendingPosts()
+    }, 100)
+  )
 
-          // Check if the added node is a post
-          if (element.matches?.(POST_SELECTOR)) {
-            processPost(element)
-          }
-
-          // Check for posts within the added node
-          element.querySelectorAll?.<HTMLElement>(POST_SELECTOR).forEach(processPost)
-        }
-      }
-    }
-  })
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  })
+  const feedContainer = document.querySelector('.scaffold-finite-scroll, .core-rail, main')
+  observer.observe(feedContainer || document.body, { childList: true, subtree: true })
 }
 
-// Process a single post
-function processPost(postElement: HTMLElement) {
-  // Skip if already processed
-  if (postElement.dataset.linkedoutProcessed) {
-    return
+function queuePost(postElement: HTMLElement) {
+  if (!postElement.dataset.linkedoutProcessed) {
+    pendingPosts.add(postElement)
+  }
+}
+
+function processPendingPosts() {
+  if (isProcessing || pendingPosts.size === 0) return
+  isProcessing = true
+
+  const processNext = () => {
+    const next = pendingPosts.values().next()
+    if (next.done) {
+      isProcessing = false
+      return
+    }
+
+    pendingPosts.delete(next.value)
+    processPost(next.value)
+
+    if (pendingPosts.size > 0) {
+      requestAnimationFrame(processNext)
+    } else {
+      isProcessing = false
+    }
   }
 
-  const postData = detectPost(postElement)
+  requestAnimationFrame(processNext)
+}
 
+function processPost(postElement: HTMLElement) {
+  if (postElement.dataset.linkedoutProcessed) return
+
+  const postData = detectPost(postElement)
   if (postData) {
     postElement.dataset.linkedoutProcessed = 'true'
     injectOverlay(postElement, postData)
   }
 }
 
-// Wait for DOM ready
+function debounce<T extends (...args: unknown[]) => void>(fn: T, delay: number): T {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+  return ((...args: unknown[]) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }) as T
+}
+
+// Start
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init)
 } else {

@@ -4,7 +4,8 @@ node_modules/
 # Build output
 dist/
 .next/
-out/
+/out/
+!**/adapters/out/
 
 # Turbo
 .turbo/
