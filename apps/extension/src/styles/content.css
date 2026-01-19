@@ -1,0 +1,99 @@
+/* LinkedOut - LinkedIn Native Style */
+
+.lo-overlay {
+  padding: 4px 16px 8px;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+.lo-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.lo-logo {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.lo-logo:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.lo-buttons {
+  display: flex;
+  gap: 0;
+}
+
+.lo-separator {
+  color: rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  margin: 0 4px;
+  font-weight: 300;
+}
+
+.lo-btn {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lo-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.lo-btn:active:not(:disabled) {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.lo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lo-btn--selected {
+  background: rgba(10, 102, 194, 0.1);
+}
+
+.lo-btn--selected:hover:not(:disabled) {
+  background: rgba(10, 102, 194, 0.15);
+}
+
+.lo-emoji {
+  font-size: 16px;
+  display: block;
+  transition: transform 0.15s;
+}
+
+.lo-btn--selected .lo-emoji {
+  transform: scale(1.1);
+}
+
+.lo-count {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  margin-left: 4px;
+}
+
+/* Subtle pulse on selection */
+@keyframes lo-select {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1.1); }
+}
+
+.lo-btn--selected .lo-emoji {
+  animation: lo-select 0.2s ease-out forwards;
+}

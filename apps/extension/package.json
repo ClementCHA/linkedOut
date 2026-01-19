@@ -1,0 +1,22 @@
+{
+  "name": "@linkedout/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build",
+    "check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@linkedout/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@linkedout/config": "workspace:*",
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^25.0.9",
+    "typescript": "^5.9.3",
+    "vite": "^7.0.5"
+  }
+}

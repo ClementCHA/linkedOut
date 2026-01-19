@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedOut</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="popup-header">
+      <h1 class="popup-title">LinkedOut</h1>
+      <p class="popup-subtitle">Bullshit Detector</p>
+    </header>
+
+    <main class="popup-content">
+      <div class="stats-card">
+        <div class="stat">
+          <span class="stat-value" id="totalVotes">-</span>
+          <span class="stat-label">Votes today</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="bullshitDetected">-</span>
+          <span class="stat-label">Bullshit detected</span>
+        </div>
+      </div>
+
+      <div class="settings">
+        <label class="toggle">
+          <input type="checkbox" id="enabledToggle" checked>
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Extension active</span>
+        </label>
+
+        <label class="toggle">
+          <input type="checkbox" id="overlayToggle" checked>
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Show voting overlay</span>
+        </label>
+      </div>
+    </main>
+
+    <footer class="popup-footer">
+      <a href="https://linkedout.app" target="_blank" class="footer-link">
+        View Leaderboard
+      </a>
+      <span class="version">v0.1.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
