@@ -1,5 +1,13 @@
 import { submitVoteToApi } from './api'
 
+// Migration: clear old votes that used full URN format
+;(async () => {
+  const result = await chrome.storage.local.get('urnMigrationDone')
+  if (!result.urnMigrationDone) {
+    await chrome.storage.local.set({ myVotes: {}, urnMigrationDone: true })
+  }
+})()
+
 export type VoteType =
   | 'solid'
   | 'interesting'
@@ -40,7 +48,6 @@ async function getVoterId(): Promise<string> {
   return voterId
 }
 
-// Local cache of user's votes (to track "myVote" state)
 async function getMyVote(postUrn: string): Promise<VoteType | null> {
   const result = await chrome.storage.local.get('myVotes')
   const myVotes: Record<string, VoteType> = result.myVotes || {}
@@ -71,10 +78,12 @@ export async function submitVote(
   voteType: VoteType
 ): Promise<PostScore> {
   const voterId = await getVoterId()
+  const previousVote = await getMyVote(postUrn)
 
   try {
     const apiResponse = await submitVoteToApi(postUrn, content, voteType, voterId)
     await setMyVote(postUrn, voteType)
+    await updateDailyStats(voteType, previousVote)
 
     return {
       myVote: voteType,
@@ -84,14 +93,36 @@ export async function submitVote(
   } catch (error) {
     console.error('[LinkedOut] API error, falling back to local:', error)
 
-    // Fallback to local storage if API fails
     await setMyVote(postUrn, voteType)
-    const myVote = await getMyVote(postUrn)
+    await updateDailyStats(voteType, previousVote)
 
     return {
-      myVote,
+      myVote: voteType,
       votes: { solid: 0, interesting: 0, salesman: 0, bullshit: 0, scam: 0, guru: 0, theater: 0 },
       total: 0,
     }
   }
+}
+
+async function updateDailyStats(voteType: VoteType, previousVote: VoteType | null): Promise<void> {
+  const result = await chrome.storage.local.get(['todayVotes', 'todayBullshit', 'lastVoteDate'])
+  const today = new Date().toDateString()
+
+  // Reset counters if it's a new day
+  let todayVotes = result.lastVoteDate === today ? (result.todayVotes || 0) : 0
+  let todayBullshit = result.lastVoteDate === today ? (result.todayBullshit || 0) : 0
+
+  // Only count as new vote if no previous vote on this post
+  if (!previousVote) {
+    todayVotes++
+  }
+
+  // Update bullshit counter
+  if (voteType === 'bullshit' && previousVote !== 'bullshit') {
+    todayBullshit++
+  } else if (previousVote === 'bullshit' && voteType !== 'bullshit') {
+    todayBullshit = Math.max(0, todayBullshit - 1)
+  }
+
+  await chrome.storage.local.set({ todayVotes, todayBullshit, lastVoteDate: today })
 }

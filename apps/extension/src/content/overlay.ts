@@ -62,8 +62,15 @@ function createButtonHTML(vote: VoteType): string {
 }
 
 async function handleVote(postData: PostData, voteType: VoteType, overlay: HTMLElement) {
+  const currentSelected = overlay.querySelector<HTMLButtonElement>('.lo-btn--selected')
+  if (currentSelected?.dataset.vote === voteType) return
+
   const buttons = overlay.querySelectorAll<HTMLButtonElement>('[data-vote]')
   buttons.forEach((btn) => (btn.disabled = true))
+
+  // Optimistic UI update
+  currentSelected?.classList.remove('lo-btn--selected')
+  overlay.querySelector<HTMLButtonElement>(`[data-vote="${voteType}"]`)?.classList.add('lo-btn--selected')
 
   try {
     const score = await submitVote(postData.urn, postData.content, voteType)
@@ -81,10 +88,18 @@ async function loadScore(postUrn: string, overlay: HTMLElement) {
 function updateOverlay(overlay: HTMLElement, score: PostScore) {
   const countEl = overlay.querySelector('[data-count]')
   if (countEl) {
-    countEl.textContent = score.total > 0 ? `${score.total}` : ''
+    const newCount = score.total > 0 ? `${score.total}` : ''
+    if (countEl.textContent !== newCount) {
+      countEl.textContent = newCount
+    }
   }
 
+  // Only update buttons that actually changed
   overlay.querySelectorAll<HTMLButtonElement>('[data-vote]').forEach((btn) => {
-    btn.classList.toggle('lo-btn--selected', btn.dataset.vote === score.myVote)
+    const shouldBeSelected = btn.dataset.vote === score.myVote
+    const isSelected = btn.classList.contains('lo-btn--selected')
+    if (shouldBeSelected !== isSelected) {
+      btn.classList.toggle('lo-btn--selected', shouldBeSelected)
+    }
   })
 }

@@ -1,11 +1,7 @@
 // Background service worker for LinkedOut extension
 
-// Listen for extension installation
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    console.log('[LinkedOut] Extension installed')
-
-    // Initialize default settings
     chrome.storage.local.set({
       settings: {
         enabled: true,

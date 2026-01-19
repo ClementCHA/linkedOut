@@ -3,6 +3,9 @@
 .lo-overlay {
   padding: 4px 16px 8px;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+  /* Prevent LinkedIn CSS animations from affecting our overlay */
+  animation: none !important;
+  transition: none !important;
 }
 
 .lo-bar {
@@ -57,8 +60,11 @@
 }
 
 .lo-btn:disabled {
+  cursor: wait;
+}
+
+.lo-btn:disabled:not(.lo-btn--selected) {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .lo-btn--selected {

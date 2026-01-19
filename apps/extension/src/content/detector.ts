@@ -13,12 +13,25 @@ const AUTHOR_SELECTOR = '.update-components-actor__title, .feed-shared-actor__na
 const AUTHOR_LINK_SELECTOR = '.update-components-actor__meta-link, .update-components-actor__container-link'
 const TIMESTAMP_SELECTOR = '.update-components-actor__sub-description, .feed-shared-actor__sub-description'
 
-const URN_REGEX = /urn:li:(activity|share|ugcPost):(\d+)/
+const URN_REGEX = /urn:li:(?:activity|share|ugcPost):(\d+)/
+
+/**
+ * Check if we're on the feed page (not a single post page)
+ */
+export function isOnFeedPage(): boolean {
+  const url = window.location.href
+  return url.includes('/feed') && !url.includes('/posts/')
+}
 
 /**
  * Extract data from a LinkedIn post element
  */
 export function detectPost(postElement: HTMLElement): PostData | null {
+  // Only process posts on the feed page
+  if (!isOnFeedPage()) {
+    return null
+  }
+
   const contentElement = postElement.querySelector(CONTENT_SELECTOR)
   const authorElement = postElement.querySelector(AUTHOR_SELECTOR)
 
@@ -47,13 +60,13 @@ export function detectPost(postElement: HTMLElement): PostData | null {
 }
 
 /**
- * Extract LinkedIn URN from post element
+ * Extract LinkedIn post ID from element (normalized - just the numeric ID)
  */
 function extractUrn(postElement: HTMLElement): string | null {
   const dataUrn = postElement.getAttribute('data-urn')
   if (dataUrn) {
     const match = dataUrn.match(URN_REGEX)
-    if (match) return match[0]
+    if (match) return match[1]
   }
   return null
 }
