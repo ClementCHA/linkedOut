@@ -1,135 +1,77 @@
-# Hexagonal Architecture Monorepo
+# LinkedOut - LinkedIn Bullshit Detector
 
-## Vue d'ensemble
+Extension Chrome pour voter "Bullshit" / "Not Bullshit" sur les posts LinkedIn.
 
-Monorepo TypeScript avec architecture hexagonale, Next.js, et les best practices Vercel.
+## Stack
 
-```
-typescript-clean-starter/
-├── apps/
-│   ├── api/          # Backend Node.js (hexagonal)
-│   └── web/          # Frontend Next.js 15
-├── packages/
-│   ├── core/         # Domain partagé (THE source of truth)
-│   ├── ui/           # Composants React partagés
-│   └── config/       # Configs TypeScript/Biome
-└── .claude/          # Skills, agents, rules
-```
+Extension Chrome MV3 (Preact) → API Hono (PostgreSQL) → Web Next.js 15
 
-## Philosophie
-
-- **Architecture Hexagonale** (Ports & Adapters - Alistair Cockburn)
-- **SOLID** (Uncle Bob)
-- **TDD** (Kent Beck)
-- **React Best Practices** (Vercel Engineering)
-
-## Packages
-
-### @linkedout/core - Domain Partagé
-
-Source unique de vérité pour le domaine métier. Partagé entre API et Web.
-
-```typescript
-// Depuis n'importe quelle app
-import { User, Email, UserId, UserDto } from '@linkedout/core'
-import type { IUserRepository } from '@linkedout/core'
-```
-
-**Contenu:**
-- `entities/` - Objets avec identité (User, Order...)
-- `value-objects/` - Immutables (Email, Money, UserId...)
-- `ports/` - Interfaces (IUserRepository...)
-- `errors/` - Erreurs métier (UserNotFoundError...)
-- `dtos/` - Data Transfer Objects partagés
-
-### @linkedout/ui - Composants React
-
-Composants React réutilisables avec Tailwind.
-
-```typescript
-import { Button, Card, Input } from '@linkedout/ui'
-```
-
-### @linkedout/config - Configurations
-
-Configs TypeScript et Biome partagées.
-
-```json
-// Dans tsconfig.json de n'importe quel package
-{ "extends": "@linkedout/config/tsconfig/node" }
-{ "extends": "@linkedout/config/tsconfig/react" }
-{ "extends": "@linkedout/config/tsconfig/nextjs" }
-```
-
-## Apps
-
-### @linkedout/api - Backend Hexagonal
+## Structure
 
 ```
-apps/api/
-├── src/
-│   ├── application/use-cases/   # Orchestration
-│   └── adapters/
-│       ├── in/http/             # Controllers (à implémenter)
-│       └── out/persistence/     # Repositories
-└── tests/
+packages/core/     → Domain (source of truth, AUCUN framework)
+apps/api/          → Backend hexagonal (use cases + adapters)
+apps/web/          → Leaderboard Next.js
+apps/extension/    → Chrome Extension
 ```
 
-### @linkedout/web - Frontend Next.js
+## Hiérarchie de décision
 
-```
-apps/web/
-├── src/
-│   ├── app/          # App Router (Server Components)
-│   ├── components/   # Composants locaux
-│   └── lib/          # Utilitaires
-```
+Quand tu dois faire un choix, applique dans cet ordre:
+
+1. **Sécurité** - Jamais de compromis (OWASP, validation, pas de secrets)
+2. **Contrat domain** - Le core définit la vérité métier
+3. **Simplicité** - Le code le plus simple qui marche
+4. **Cohérence** - Suivre les patterns existants du projet
+5. **Performance** - Optimiser seulement si nécessaire
+
+## Règles de décision
+
+| Si tu... | Alors... |
+|----------|----------|
+| Crées une entité/VO | → Dans `packages/core/`, jamais dans apps/ |
+| Ajoutes un endpoint | → Controller (validation) → UseCase (logique) → Repository (data) |
+| Hésites entre server/client component | → Server par défaut, client seulement pour interactivité |
+| Écris une query SQL | → Paramétrisée, jamais de concaténation |
+| Retournes des données d'un use case | → DTO, jamais l'entité directement |
+| Importes depuis core/ | → OK partout, c'est la source of truth |
+| Importes depuis apps/ | → INTERDIT entre apps, utilise core/ |
+
+## Anti-patterns (ne jamais faire)
+
+- `require()` → Utiliser `import` (ES Modules)
+- Logique métier dans un controller → Déplacer dans un use case
+- Entité retournée par l'API → Mapper vers un DTO
+- `any` en TypeScript → Typer explicitement
+- Test sans assertion → Chaque test vérifie un comportement
+- Commit sans conventionnel → `feat:`, `fix:`, `refactor:`
+
+## Questions à se poser
+
+Avant d'écrire du code, vérifie:
+
+1. **Où va ce code?** Domain (core) vs Application (use case) vs Adapter (controller/repo)
+2. **Qui dépend de qui?** Le flux: Adapter IN → Use Case → Port ← Adapter OUT
+3. **Est-ce testable?** Si non, probablement mal structuré
+4. **Existe-t-il déjà?** Chercher dans core/ avant de créer
+
+## Contexte détaillé
+
+| Besoin | Fichier |
+|--------|---------|
+| Termes métier (URN, VoteType...) | `.claude/context/project-glossary.md` |
+| Format API (status codes, erreurs) | `.claude/context/api-conventions.md` |
+| Pourquoi ces choix (ADRs) | `.claude/context/tech-decisions.md` |
 
 ## Commandes
 
 ```bash
-# Monorepo
-pnpm dev          # Démarre tout en parallèle
-pnpm build        # Build tous les packages
-pnpm test         # Tests tous les packages
-pnpm lint         # Lint tous les packages
-
-# Package spécifique
-pnpm --filter @linkedout/api test
-pnpm --filter @linkedout/web dev
+pnpm dev                      # Tout en parallèle
+pnpm --filter api dev         # API seule
+pnpm --filter extension build # Build extension → dist/
+pnpm test && pnpm lint
 ```
 
-## Règles d'Architecture
+## Commands Claude
 
-### Domain (@linkedout/core)
-- AUCUN import de frameworks
-- AUCUNE dépendance vers apps/
-- Logique métier UNIQUEMENT ici
-
-### Application (apps/api)
-- Orchestre via Use Cases
-- Dépend de @linkedout/core (ports)
-- Ne contient PAS de logique métier
-
-### Presentation (apps/web)
-- Importe @linkedout/core (DTOs seulement côté client)
-- Importe @linkedout/ui (composants)
-- Server Components par défaut
-
-## TDD Workflow
-
-```
-RED    → Écrire un test qui échoue
-GREEN  → Code minimal pour passer
-REFACTOR → Améliorer sans casser
-```
-
-## Next.js Best Practices
-
-- Server Components par défaut
-- `"use client"` au plus bas niveau
-- Paralléliser les fetches (`Promise.all`)
-- Dynamic imports pour code non-critique
-- Cache avec `next: { revalidate: ... }`
-
-Voir `.claude/skills/react-best-practices/` pour les 45 règles Vercel.
+`/feature` `/commit` `/pr` `/api` `/component` `/test-first` `/debug`
