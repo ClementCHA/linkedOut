@@ -3,18 +3,40 @@
     "allow": [
       "Bash(pnpm test:*)",
       "Bash(pnpm run test:*)",
+      "Bash(pnpm test --filter *)",
+      "Bash(pnpm --filter * test)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm run lint:*)",
       "Bash(pnpm check)",
       "Bash(pnpm run check)",
       "Bash(pnpm build)",
       "Bash(pnpm run build)",
-      "Bash(git:*)"
+      "Bash(pnpm dev)",
+      "Bash(pnpm run dev)",
+      "Bash(pnpm install)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm remove *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git checkout*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git stash*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)"
     ],
     "deny": [
       "Read(.env*)",
       "Read(secrets/**)",
-      "Edit(.env*)"
+      "Edit(.env*)",
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)"
     ]
   },
   "hooks": {

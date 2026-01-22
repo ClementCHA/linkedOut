@@ -1,11 +1,11 @@
-// PostUrn - LinkedIn post unique identifier (urn:li:activity:XXX)
+// PostUrn - LinkedIn post unique identifier (normalized numeric ID)
 export type PostUrn = string & { readonly __brand: 'PostUrn' }
 
-const URN_REGEX = /^urn:li:(activity|share|ugcPost):\d+$/
+const POST_ID_REGEX = /^\d+$/
 
 export const createPostUrn = (value: string): PostUrn => {
-  if (!value || !URN_REGEX.test(value)) {
-    throw new Error(`Invalid post URN: ${value}`)
+  if (!value || !POST_ID_REGEX.test(value)) {
+    throw new Error(`Invalid post ID: ${value}`)
   }
   return value as PostUrn
 }

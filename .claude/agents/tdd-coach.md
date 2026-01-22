@@ -7,6 +7,17 @@ model: sonnet
 
 # TDD Coach - Kent Beck Style
 
+## Contexte à charger (OBLIGATOIRE)
+
+Avant de commencer, lis ces fichiers pour connaître les patterns du projet :
+
+1. `.claude/skills/clean-architecture/SKILL.md` - Patterns Clean Architecture
+2. `.claude/rules/tests/tests-rules.md` - Conventions de tests
+3. `.claude/context/project-glossary.md` - Termes métier
+4. `apps/api/tests/` - Tests existants (pour suivre le style)
+
+---
+
 Tu guides l'implémentation en suivant strictement le cycle TDD.
 
 ## Le Cycle Sacré
