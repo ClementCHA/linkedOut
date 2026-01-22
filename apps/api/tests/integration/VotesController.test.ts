@@ -58,7 +58,7 @@ describe('VotesController', () => {
 
       expect(res.status).toBe(400)
       const body = await res.json()
-      expect(body.error).toContain('Missing required fields')
+      expect(body.success).toBe(false)
     })
 
     it('should return 400 when content is missing', async () => {
@@ -100,7 +100,7 @@ describe('VotesController', () => {
 
       expect(res.status).toBe(400)
       const body = await res.json()
-      expect(body.error).toContain('Invalid vote type')
+      expect(body.success).toBe(false)
     })
 
     it('should handle vote update (same voter, same post)', async () => {
@@ -207,7 +207,7 @@ describe('VotesController', () => {
 
       expect(res.status).toBe(400)
       const body = await res.json()
-      expect(body.error).toContain('Invalid vote type')
+      expect(body.success).toBe(false)
     })
 
     it('should respect limit parameter', async () => {

@@ -1,13 +1,15 @@
 import { Hono } from 'hono'
-import type { ICreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase.js'
-import type { IGetUserUseCase } from '../../../application/use-cases/GetUserUseCase.js'
-import type { IGetAllUsersUseCase } from '../../../application/use-cases/GetAllUsersUseCase.js'
+import { zValidator } from '@hono/zod-validator'
 import {
   DomainError,
   UserNotFoundError,
   EmailAlreadyExistsError,
   InvalidEmailError
 } from '@linkedout/core'
+import type { ICreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase.js'
+import type { IGetUserUseCase } from '../../../application/use-cases/GetUserUseCase.js'
+import type { IGetAllUsersUseCase } from '../../../application/use-cases/GetAllUsersUseCase.js'
+import { CreateUserSchema, UserIdParamSchema } from './schemas.js'
 
 export function createUserRoutes(
   createUserUseCase: ICreateUserUseCase,
@@ -21,18 +23,11 @@ export function createUserRoutes(
     return c.json(users)
   })
 
-  app.post('/users', async (c) => {
+  app.post('/users', zValidator('json', CreateUserSchema), async (c) => {
     try {
-      const body = await c.req.json<{ name: string; email: string }>()
+      const { name, email } = c.req.valid('json')
 
-      if (!body.name || !body.email) {
-        return c.json({ error: 'Name and email are required' }, 400)
-      }
-
-      const user = await createUserUseCase.execute({
-        name: body.name,
-        email: body.email
-      })
+      const user = await createUserUseCase.execute({ name, email })
 
       return c.json(user, 201)
     } catch (error) {
@@ -49,10 +44,10 @@ export function createUserRoutes(
     }
   })
 
-  app.get('/users/:id', async (c) => {
+  app.get('/users/:id', zValidator('param', UserIdParamSchema), async (c) => {
     try {
-      const userId = c.req.param('id')
-      const user = await getUserUseCase.execute({ userId })
+      const { id } = c.req.valid('param')
+      const user = await getUserUseCase.execute({ userId: id })
       return c.json(user)
     } catch (error) {
       if (error instanceof UserNotFoundError) {

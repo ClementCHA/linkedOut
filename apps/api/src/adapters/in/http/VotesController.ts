@@ -1,6 +1,9 @@
 import { Hono } from 'hono'
-import { DomainError, InvalidVoteTypeError, isValidVoteType, type VoteType } from '@linkedout/core'
+import { zValidator } from '@hono/zod-validator'
+import { DomainError, InvalidVoteTypeError } from '@linkedout/core'
+import type { VoteType } from '@linkedout/core'
 import type { ISubmitVoteUseCase, IGetLeaderboardUseCase } from '../../../application/use-cases/index.js'
+import { SubmitVoteSchema, LeaderboardQuerySchema } from './schemas.js'
 
 export const createVotesRoutes = (
   submitVoteUseCase: ISubmitVoteUseCase,
@@ -9,14 +12,9 @@ export const createVotesRoutes = (
   const router = new Hono()
 
   // POST /votes - Submit a vote
-  router.post('/', async (c) => {
+  router.post('/', zValidator('json', SubmitVoteSchema), async (c) => {
     try {
-      const body = await c.req.json()
-      const { urn, content, voteType, voterId } = body
-
-      if (!urn || !content || !voteType || !voterId) {
-        return c.json({ error: 'Missing required fields: urn, content, voteType, voterId' }, 400)
-      }
+      const { urn, content, voteType, voterId } = c.req.valid('json')
 
       const result = await submitVoteUseCase.execute({
         urn,
@@ -38,17 +36,11 @@ export const createVotesRoutes = (
   })
 
   // GET /votes/leaderboard - Get leaderboard
-  router.get('/leaderboard', async (c) => {
-    const voteType = c.req.query('type') as VoteType
-    const limit = parseInt(c.req.query('limit') || '20', 10)
-    const offset = parseInt(c.req.query('offset') || '0', 10)
-
-    if (voteType && !isValidVoteType(voteType)) {
-      return c.json({ error: `Invalid vote type: ${voteType}` }, 400)
-    }
+  router.get('/leaderboard', zValidator('query', LeaderboardQuerySchema), async (c) => {
+    const { type, limit, offset } = c.req.valid('query')
 
     const result = await getLeaderboardUseCase.execute({
-      voteType,
+      voteType: type as VoteType | undefined,
       limit,
       offset,
     })
