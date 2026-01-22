@@ -16,6 +16,7 @@
     "@linkedout/core": "workspace:*",
     "@linkedout/ui": "workspace:*",
     "next": "^16.1.2",
+    "next-intl": "^4.7.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },

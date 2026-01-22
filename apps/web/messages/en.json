@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "LinkedOut - The Corporate Bullshit Wall of Fame",
+    "description": "The collaborative ranking of the most inspiring LinkedIn posts... or not."
+  },
+  "header": {
+    "title": "LinkedOut",
+    "tagline": "Because someone had to say it.",
+    "subtitle": "The collaborative ranking of LinkedIn posts nobody asked for."
+  },
+  "filters": {
+    "all": "All masterpieces",
+    "bullshit": "Certified bullshit",
+    "guru": "Self-proclaimed gurus",
+    "theater": "Corporate theater",
+    "salesman": "Dream sellers",
+    "scam": "Premium scams",
+    "solid": "Actually good (really)",
+    "interesting": "Decent"
+  },
+  "post": {
+    "endorsedBy": "Endorsed by {count} recruiters",
+    "endorsedByZero": "Endorsed by 0 recruiters",
+    "votes": "{count} LinkedIn experts confirmed",
+    "totalVotes": "{count} diagnoses made",
+    "noVotes": "Nobody dared to vote yet",
+    "postedBy": "Posted by a Thought Leader",
+    "jobTitles": [
+      "Chief Synergy Disruptor",
+      "VP of Thought Leadership",
+      "Head of Paradigm Shifting",
+      "Senior Buzzword Architect",
+      "Director of Humble Bragging",
+      "Lead Inspiration Evangelist",
+      "Chief Storytelling Officer",
+      "VP of LinkedIn Posting",
+      "Head of Personal Branding",
+      "Senior Motivation Dealer"
+    ],
+    "timeAgo": "{value} ago",
+    "timeUnits": {
+      "minutes": "{count}min",
+      "hours": "{count}h",
+      "days": "{count}d"
+    },
+    "reactions": "{count} people agree (obviously)",
+    "comments": "{count} 'So true!' comments",
+    "shares": "{count} courtesy shares"
+  },
+  "empty": {
+    "title": "The feed is empty... for now",
+    "subtitle": "Install the extension and start voting on LinkedIn. Bullshit won't detect itself."
+  },
+  "voteLabels": {
+    "solid": "Solid",
+    "interesting": "Interesting",
+    "salesman": "Salesman",
+    "bullshit": "Bullshit",
+    "scam": "Scam",
+    "guru": "Guru",
+    "theater": "Theater"
+  },
+  "footer": {
+    "disclaimer": "This site is a parody. No thought leaders were harmed in the making of this ranking.",
+    "cta": "Install the Chrome extension and join the movement."
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode"
+  },
+  "language": {
+    "fr": "Français",
+    "en": "English"
+  }
+}

@@ -11,6 +11,9 @@ export class PostgresLeaderboardRepository implements ILeaderboardRepository {
     offset = 0
   ): Promise<LeaderboardEntryDto[]> {
     const orderByColumn = voteType ? `${voteType}_count` : 'total_votes'
+    const filterClause = voteType
+      ? `WHERE ${voteType}_count > 0`
+      : 'WHERE total_votes > 0'
 
     const result = await this.pool.query(
       `SELECT
@@ -27,7 +30,7 @@ export class PostgresLeaderboardRepository implements ILeaderboardRepository {
         guru_count,
         theater_count
       FROM leaderboard
-      WHERE total_votes > 0
+      ${filterClause}
       ORDER BY ${orderByColumn} DESC, created_at DESC
       LIMIT $1 OFFSET $2`,
       [limit, offset]

@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "LinkedOut - Le Wall of Fame du Bullshit Corporate",
+    "description": "Le classement collaboratif des posts LinkedIn les plus inspirants... ou pas."
+  },
+  "header": {
+    "title": "LinkedOut",
+    "tagline": "Parce que quelqu'un devait le dire.",
+    "subtitle": "Le classement collaboratif des posts LinkedIn que personne n'a demandé."
+  },
+  "filters": {
+    "all": "Tous les chefs-d'oeuvre",
+    "bullshit": "Bullshit certifié",
+    "guru": "Gourous autoproclamés",
+    "theater": "Théâtre corporate",
+    "salesman": "Vendeurs de rêve",
+    "scam": "Arnaques premium",
+    "solid": "Vraiment bien (si si)",
+    "interesting": "Potable"
+  },
+  "post": {
+    "endorsedBy": "Recommandé par {count} recruteurs",
+    "endorsedByZero": "Recommandé par 0 recruteur",
+    "votes": "{count} experts LinkedIn ont confirmé",
+    "totalVotes": "{count} diagnostics posés",
+    "noVotes": "Personne n'a encore osé voter",
+    "postedBy": "Publié par un·e Thought Leader",
+    "jobTitles": [
+      "Chief Synergy Disruptor",
+      "VP of Thought Leadership",
+      "Head of Paradigm Shifting",
+      "Senior Buzzword Architect",
+      "Director of Humble Bragging",
+      "Lead Inspiration Evangelist",
+      "Chief Storytelling Officer",
+      "VP of LinkedIn Posting",
+      "Head of Personal Branding",
+      "Senior Motivation Dealer"
+    ],
+    "timeAgo": "Il y a {value}",
+    "timeUnits": {
+      "minutes": "{count}min",
+      "hours": "{count}h",
+      "days": "{count}j"
+    },
+    "reactions": "{count} personnes sont d'accord (évidemment)",
+    "comments": "{count} commentaires 'Tellement vrai !'",
+    "shares": "{count} partages de complaisance"
+  },
+  "empty": {
+    "title": "Le feed est vide... pour l'instant",
+    "subtitle": "Installez l'extension et commencez à voter sur LinkedIn. Le bullshit ne va pas se détecter tout seul."
+  },
+  "voteLabels": {
+    "solid": "Solide",
+    "interesting": "Intéressant",
+    "salesman": "Vendeur",
+    "bullshit": "Bullshit",
+    "scam": "Scam",
+    "guru": "Gourou",
+    "theater": "Théâtre"
+  },
+  "footer": {
+    "disclaimer": "Ce site est une parodie. Aucun thought leader n'a été blessé dans la création de ce classement.",
+    "cta": "Installez l'extension Chrome et rejoignez le mouvement."
+  },
+  "theme": {
+    "light": "Mode clair",
+    "dark": "Mode sombre"
+  },
+  "language": {
+    "fr": "Français",
+    "en": "English"
+  }
+}
