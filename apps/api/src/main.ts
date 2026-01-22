@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { swaggerUI } from '@hono/swagger-ui'
 
 import {
   createCreateUserUseCase,
@@ -12,6 +13,7 @@ import {
 } from './application/use-cases/index.js'
 import { createInMemoryUserRepository } from './adapters/out/persistence/InMemoryUserRepository.js'
 import { createUserRoutes, createVotesRoutes } from './adapters/in/http/index.js'
+import { openApiSpec } from './adapters/in/http/openapi.js'
 import { createPool } from './adapters/out/persistence/database.js'
 import { PostgresPostRepository } from './adapters/out/persistence/PostgresPostRepository.js'
 import { PostgresVoteRepository } from './adapters/out/persistence/PostgresVoteRepository.js'
@@ -42,6 +44,10 @@ app.use('*', cors())
 
 // Health check
 app.get('/health', (c) => c.json({ status: 'ok' }))
+
+// Swagger
+app.get('/doc', swaggerUI({ url: '/openapi.json' }))
+app.get('/openapi.json', (c) => c.json(openApiSpec))
 
 // Routes
 const userRoutes = createUserRoutes(createUserUseCase, getUserUseCase, getAllUsersUseCase)
